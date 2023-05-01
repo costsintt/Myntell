@@ -1,7 +1,7 @@
 import openai
 from collections import deque
 
-openai.api_key = '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'
+openai.api_key = 'PUT HERE YOUR API'
 
 class Chatbot:
     def __init__(self, model="gpt-3.5-turbo", messages=[]):
