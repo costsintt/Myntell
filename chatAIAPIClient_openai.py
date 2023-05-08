@@ -22,25 +22,17 @@ class chatAIAPIClient(chatAIAPIClient_abstract.chatAIAPIClient):
     def __init__(self, api_key: str, base_url: str = None, model: str = "gpt-3.5-turbo"):
         super().__init__(api_key, base_url, model)
 
-    def respond(self, messages: List[Dict[str, str]], behaviour: str = None):
+    def respond(self, messages: List[Dict[str, str]], behaviour: str = None) -> Dict[str, str]:
         openai.api_key = self.api_key
         firstMessage = {"role": "user", "content": behaviour}
         messages.insert(0, firstMessage)
         response = openai.ChatCompletion.create(model=self.model, messages=messages)
-        return response.choices[0].message['content']
+        return response.choices[0].message
     
 
 if __name__ == "__main__":
     import apiKeys
     bot = chatAIAPIClient(api_key=apiKeys.apiKey_openai)
-
-    print(bot.respond(
-        [
-        {"role": "user", "content": "Who won the world series in 2020?"},
-        {"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
-        {"role": "user", "content": "Where was it played?"}
-        ], behaviour="You are a helpful assistant."
-    ))
 
     print(bot.respond(
         [

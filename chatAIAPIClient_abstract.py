@@ -24,5 +24,5 @@ class chatAIAPIClient(ABC):
         self.model = model
 
     @abstractmethod
-    def respond(self, messages: List[Dict[str, str]], behaviour: str = None):
+    def respond(self, messages: List[Dict[str, str]], behaviour: str = None) -> Dict[str, str]:
         pass

@@ -26,8 +26,16 @@ class chatAIAPIClient(chatAIAPIClient_abstract.chatAIAPIClient):
         self.__counter += 1
         return self.__counter
 
-    def respond(self, messages: List[Dict[str, str]], behaviour: str = None): 
-        return "This should be AI response number {}.".format(self.__incrementCounter())
+    def respond(self, messages: List[Dict[str, str]], behaviour: str = None) -> Dict[str, str]:
+        if behaviour is None:
+            behaviour = "No specific behaviour"
+
+        response = "This should be AI response number {}. "\
+                   "My messages({}): {}... . My behaviour: {}... .".\
+            format(self.__incrementCounter(),
+                   len(messages), "... ".join([message["content"][:13] for message in messages]),
+                   behaviour[:25])
+        return {"role": "assistant", "content": response}
 
 
 
@@ -38,7 +46,7 @@ if __name__ == "__main__":
         {"role": "user", "content": "Who won the world series in 2020?"},
         {"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
         {"role": "user", "content": "Where was it played?"}
-        ], behaviour="You are a helpful assistant."
+        ]
     ))
 
     print(bot.respond(
