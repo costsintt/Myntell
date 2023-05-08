@@ -1,42 +1,52 @@
-import openai
-from collections import deque
+# chatbot.py: Class for chatting with an AI, utilizing the abstract class from chatAIAPIClient_abstract.py
+# Copyright (C) 2023 Bychkou Yahor - @costsintt - Eg.Helik25@gmail.com
 
-openai.api_key = 'PUT HERE YOUR API'
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+from collections import deque
+from chatAIAPIClient_abstract import chatAIAPIClient
 
 class Chatbot:
-    def __init__(self, model="gpt-3.5-turbo", messages=[]):
-        self.model = model
-        self.messages = deque(messages, maxlen=5)  # deque with max length 5 to remember last 5 messages
-        self.myRules = {"role": "user", "content": "Be a humorous companion and improvise entertaining responses, even if you lack knowledge on a subject."}
+    def __init__(self, APIClient: chatAIAPIClient, behaviour: str = None):
+        self.APIClient = APIClient
+        
+        messages = []
+        self.messages = deque(messages, maxlen=5)
+
+        if behaviour is not None:
+            self.behaviour = behaviour
+        else:
+          self.behaviour = "Be a humorous companion and improvise entertaining responses,"\
+                           "even if you lack knowledge on a subject."
 
     def chat(self, message):
         self.messages.append({"role": "user", "content": message})
 
-        response = openai.ChatCompletion.create(
-          model=self.model,
-          messages= [self.myRules] + [mes for mes in self.messages]
-        )
+        response = self.APIClient.respond(messages=list(self.messages), behaviour=self.behaviour)
 
-        self.messages.append({"role": "assistant", "content": response.choices[0].message['content']})
+        self.messages.append(response)
         
-        return response.choices[0].message['content']
-    
-    def checkGrammar(self, message):
+        return response['content']
 
-        response = openai.ChatCompletion.create(
-          model=self.model,
-          messages=[
-        {"role": "user",
-         "content": f'Check the transcribed audio input for speech errors, including\
-                      incorrect sentence formation, missing or incorrect prepositions, and any\
-                      other speech and logical errors. If the sentence is correct, output "Correct."\
-                      If the sentence is incorrect, provide an explanation\
-                      for each problem found. The message: "{message}".'},
-                    ]
-        )
-        
-        return response.choices[0].message['content']
 
 if __name__ == "__main__":
-    botik = Chatbot()
-    print(botik.checkGrammar("I just sit and doing some stuff."))
+    from apiKeys import apiKey_openai
+    from chatAIAPIClient_mock import chatAIAPIClient
+
+    api = chatAIAPIClient(api_key=apiKey_openai)
+    
+    bot = Chatbot(api)
+
+    print(bot.chat("What's your name?"))
+    print(bot.chat("What?"))
