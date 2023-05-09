@@ -18,7 +18,7 @@ from typing import Dict, List
 import openai
 import chatAIAPIClient_abstract
 
-class chatAIAPIClient(chatAIAPIClient_abstract.chatAIAPIClient):
+class ChatAIAPIClient(chatAIAPIClient_abstract.ChatAIAPIClient):
     def __init__(self, api_key: str, base_url: str = None, model: str = "gpt-3.5-turbo"):
         super().__init__(api_key, base_url, model)
 
@@ -32,7 +32,7 @@ class chatAIAPIClient(chatAIAPIClient_abstract.chatAIAPIClient):
 
 if __name__ == "__main__":
     import apiKeys
-    bot = chatAIAPIClient(api_key=apiKeys.apiKey_openai)
+    bot = ChatAIAPIClient(api_key=apiKeys.apiKey_openai)
 
     print(bot.respond(
         [

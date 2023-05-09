@@ -17,7 +17,7 @@
 from typing import List, Dict
 from abc import ABC, abstractmethod
 
-class chatAIAPIClient(ABC):
+class ChatAIAPIClient(ABC):
     def __init__(self, api_key: str, base_url: str = None, model: str = None):
         self.api_key = api_key
         self.base_url = base_url

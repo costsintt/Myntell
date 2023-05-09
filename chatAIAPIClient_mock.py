@@ -17,7 +17,7 @@
 from typing import List, Dict
 import chatAIAPIClient_abstract
 
-class chatAIAPIClient(chatAIAPIClient_abstract.chatAIAPIClient):
+class ChatAIAPIClient(chatAIAPIClient_abstract.ChatAIAPIClient):
     def __init__(self, api_key: str = None, base_url: str = None, model: str = None):
         super().__init__(api_key, base_url, model)
         self.__counter = 0
@@ -40,7 +40,7 @@ class chatAIAPIClient(chatAIAPIClient_abstract.chatAIAPIClient):
 
 
 if __name__ == "__main__":
-    bot = chatAIAPIClient("bbe8w9hfafaskfhj", "valera.com", "turbo-svin5000")
+    bot = ChatAIAPIClient("bbe8w9hfafaskfhj", "valera.com", "turbo-svin5000")
     print(bot.respond(
         [
         {"role": "user", "content": "Who won the world series in 2020?"},

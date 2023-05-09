@@ -15,10 +15,10 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from collections import deque
-from chatAIAPIClient_abstract import chatAIAPIClient
+from chatAIAPIClient_abstract import ChatAIAPIClient
 
 class Chatbot:
-    def __init__(self, APIClient: chatAIAPIClient, behaviour: str = None):
+    def __init__(self, APIClient: ChatAIAPIClient, behaviour: str = None):
         self.APIClient = APIClient
         
         messages = []
@@ -42,9 +42,9 @@ class Chatbot:
 
 if __name__ == "__main__":
     from apiKeys import apiKey_openai
-    from chatAIAPIClient_mock import chatAIAPIClient
+    from chatAIAPIClient_mock import ChatAIAPIClient
 
-    api = chatAIAPIClient(api_key=apiKey_openai)
+    api = ChatAIAPIClient(api_key=apiKey_openai)
     
     bot = Chatbot(api)
 
