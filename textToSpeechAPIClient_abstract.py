@@ -23,6 +23,6 @@ class TextToSpeechAPIClient(ABC):
         self.model = model
 
     @abstractmethod
-    def synthesize(self, text: str, language: str, voice: str, mood: str) -> bytes:
+    def synthesize(self, text: str, language: str = None, voice: str = None, mood: str = None) -> bytes:
         #output format is mp3
         pass

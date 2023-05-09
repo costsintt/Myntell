@@ -25,5 +25,6 @@ class SpeechToTextAPIClient(ABC):
         self.model = model
 
     @abstractmethod
+    #audioSteam must be mp3, no format choice
     def transcribe(self, audioStream: Union[BytesIO, BinaryIO], language: str = 'en-US') -> str:
         pass
