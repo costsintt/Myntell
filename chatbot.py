@@ -14,15 +14,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from collections import deque
 from chatAIAPIClient_abstract import ChatAIAPIClient
 
 class Chatbot:
-    def __init__(self, APIClient: ChatAIAPIClient, behaviour: str = None):
+    def __init__(self, APIClient: ChatAIAPIClient, behaviour: str = None,
+                 numberOfActiveMessages : int = 5):
         self.APIClient = APIClient
         
-        messages = []
-        self.messages = deque(messages, maxlen=5)
+        self.messages = []
+        self.numberOfActiveMessages = numberOfActiveMessages
 
         if behaviour is not None:
             self.behaviour = behaviour
@@ -31,11 +31,12 @@ class Chatbot:
                            "even if you lack knowledge on a subject."
 
     def chat(self, message):
-        self.messages.append({"role": "user", "content": message})
+        self.messages.insert(0, {"role": "user", "content": message})
 
-        response = self.APIClient.respond(messages=list(self.messages), behaviour=self.behaviour)
+        response = self.APIClient.respond(messages=list(self.messages[:self.numberOfActiveMessages]),
+                                          behaviour=self.behaviour)
 
-        self.messages.append(response)
+        self.messages.insert(0, response)
         
         return response['content']
 
@@ -46,7 +47,11 @@ if __name__ == "__main__":
 
     api = ChatAIAPIClient(api_key=apiKey_openai)
     
-    bot = Chatbot(api)
+    bot = Chatbot(api, numberOfActiveMessages=5)
 
-    print(bot.chat("What's your name?"))
-    print(bot.chat("What?"))
+    print(bot.chat("M1"))
+    print(bot.chat("M2"))
+    print(bot.chat("M3"))
+    print(bot.chat("M4"))
+    print(bot.chat("M5"))
+    print(bot.chat("M6"))
