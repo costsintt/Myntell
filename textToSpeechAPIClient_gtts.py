@@ -23,8 +23,8 @@ class TextToSpeechAPIClient(textToSpeechAPIClient_abstract.TextToSpeechAPIClient
     def __init__(self, api_key: str = None, base_url: str = None, model: str = None):
         super().__init__(api_key, base_url, model)
 
-    def synthesize(self, text: str, language: str = None, voice: str = None, mood: str = None) -> bytes:
-        tts = gTTS(text=text)
+    def synthesize(self, text: str, language: str = 'en', voice: str = None, mood: str = None) -> bytes:
+        tts = gTTS(text=text, lang=language)
         
         with BytesIO() as audioData:
             tts.write_to_fp(audioData)
