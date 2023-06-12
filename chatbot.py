@@ -31,12 +31,12 @@ class Chatbot:
                            "even if you lack knowledge on a subject."
 
     def chat(self, message):
-        self.messages.insert(0, {"role": "user", "content": message})
+        self.messages.append({"role": "user", "content": message})
 
         response = self.APIClient.respond(messages=list(self.messages[:self.numberOfActiveMessages]),
                                           behaviour=self.behaviour)
 
-        self.messages.insert(0, response)
+        self.messages.append(response)
         
         return response['content']
 
