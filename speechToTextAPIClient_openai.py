@@ -24,7 +24,8 @@ class SpeechToTextAPIClient(speechToTextAPIClient_abstract.SpeechToTextAPIClient
     def __init__(self, api_key: str, base_url: str = None, model: str = "whisper-1"):
         super().__init__(api_key, base_url, model)
 
-    def transcribe(self, audioStream: Union[BytesIO, BinaryIO], language: str = 'en-US') -> str:
+    def transcribe(self, audioStream: Union[BytesIO, BinaryIO], format: str = 'wav', language: str = 'en-US') -> str:
+        audioStream.name = "temp." + format
         transcript = openai.Audio.transcribe(model=self.model, file=audioStream,
                                              api_key=self.api_key)
         return transcript.text

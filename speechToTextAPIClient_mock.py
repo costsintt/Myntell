@@ -28,5 +28,5 @@ class SpeechToTextAPIClient(speechToTextAPIClient_abstract.SpeechToTextAPIClient
         self.__counter += 1
         return self.__counter
 
-    def transcribe(self, audioStream: Union[BytesIO, BinaryIO], language: str = 'en-US') -> str:
+    def transcribe(self, audioStream: Union[BytesIO, BinaryIO], format: str = 'wav', language: str = 'en-US') -> str:
         return "This should be transcribed response number {}.".format(self.__incrementCounter())
