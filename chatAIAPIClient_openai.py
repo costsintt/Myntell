@@ -27,7 +27,8 @@ class ChatAIAPIClient(chatAIAPIClient_abstract.ChatAIAPIClient):
         firstMessage = {"role": "user", "content": behaviour}
         messages.insert(0, firstMessage)
         response = openai.ChatCompletion.create(model=self.model, messages=messages)
-        return response.choices[0].message
+        response = response.choices[0].message
+        return {'role': response['role'], 'content': response['content']}
     
 
 if __name__ == "__main__":
