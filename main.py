@@ -65,10 +65,6 @@ if __name__ == "__main__":
     ttsAPI = TextToSpeechAPIClient()
     chatAPI = ChatAIAPIClient(api_key=apiKey_openai)
     
-    grammarBot = Chatbot(chatAPI,
-                         behaviour="Correct grammar and assist non-English speakers in expressing \
-                            themselves in English. If the input text is not in English, translate \
-                            it into English.")
     conversationalBot = Chatbot(chatAPI)
 
     recorder = AudioRecorder()
@@ -80,7 +76,7 @@ if __name__ == "__main__":
             print("Recording started...", sep='')
             isRecording = True
             recorder.start_recording()
-        elif (command == '2' or command == '3') and isRecording:
+        elif (command == '2') and isRecording:
             print("STOPPED")
             isRecording = False
             data = recorder.stop_recording()
@@ -88,10 +84,9 @@ if __name__ == "__main__":
             sf.write(audioFile, data, 44100, format="wav")
             audioFile.seek(0)
             
-            print("---GRAMMAR---") if command == '2' else print("---CONVERSATION---")
             userMessage = sttAPI.transcribe(audioFile)
             print("User:\t", userMessage)
-            botMessage = grammarBot.chat(userMessage) if command == '2' else conversationalBot.chat(userMessage)
+            botMessage = conversationalBot.chat(userMessage)
             print("Bot:\t", botMessage)
             
             audioFile.seek(0)
@@ -104,18 +99,9 @@ if __name__ == "__main__":
             pygame.mixer.music.play()
             while pygame.mixer.music.get_busy():
                 pygame.time.Clock().tick(10)
-        elif command == '4' or command == '5':
-            print("---GRAMMAR---") if command == '4' else print("---CONVERSATION---")
-            userMessage = input('write input: ')
-            botMessage = grammarBot.chat(userMessage) if command == '4' else conversationalBot.chat(userMessage)
-            print("Bot:\t", botMessage)
 
 
         elif command == '0':
             print("ALL MESSAGES")
-            print("---conversational bot---")
-            for message in conversationalBot.messages:
-                print(message)
-            print("---grammar bot---")
             for message in conversationalBot.messages:
                 print(message)
