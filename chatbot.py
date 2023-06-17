@@ -33,7 +33,7 @@ class Chatbot:
     def chat(self, message):
         self.messages.append({"role": "user", "content": message})
 
-        response = self.APIClient.respond(messages=list(self.messages[:self.numberOfActiveMessages]),
+        response = self.APIClient.respond(messages=list(self.messages[-self.numberOfActiveMessages:]),
                                           behaviour=self.behaviour)
 
         self.messages.append(response)
