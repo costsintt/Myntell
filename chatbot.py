@@ -27,7 +27,7 @@ class Chatbot:
         if behaviour is not None:
             self.behaviour = behaviour
         else:
-          self.behaviour = "Be a humorous companion and improvise entertaining responses,"\
+          self.behaviour = "Improvise entertaining and not long responses,"\
                            "even if you lack knowledge on a subject."
 
     def chat(self, message):
