@@ -1,5 +1,6 @@
 # chatAIAPIClient_openai.py: OpenAI API-based implementation of an AI-chat API client,
 # utilizing the abstract class from chatAIAPIClient_abstract.py
+# Copyright (C) 2024 Bychkou Yahor - @costsintt - Eg.Helik25@gmail.com
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,17 +24,17 @@ class ChatAIAPIClient(chatAIAPIClient_abstract.ChatAIAPIClient):
         super().__init__(api_key, base_url, model)
 
     def respond(self, messages: List[Dict[str, str]], behaviour: str = None) -> Dict[str, str]:
-        openai.api_key = self.api_key
+        client = openai.OpenAI(api_key=self.api_key)
         firstMessage = {"role": "user", "content": behaviour}
         messages.insert(0, firstMessage)
-        response = openai.ChatCompletion.create(model=self.model, messages=messages)
+        response = client.chat.completions.create(model=self.model, messages=messages)
         response = response.choices[0].message
-        return {'role': response['role'], 'content': response['content']}
+        return {'role': response.role, 'content': response.content}
     
 
 if __name__ == "__main__":
     import apiKeys
-    bot = ChatAIAPIClient(api_key=apiKeys.apiKey_openai)
+    bot = ChatAIAPIClient(api_key=apiKeys.apiKeys[0])
 
     print(bot.respond(
         [
