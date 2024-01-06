@@ -16,6 +16,8 @@
 
 from chatAIAPIClient_abstract import ChatAIAPIClient
 
+from typing import List, Dict
+
 class Chatbot:
     def __init__(self, APIClient: ChatAIAPIClient, behaviour: str = None,
                  numberOfActiveMessages : int = 5):
@@ -30,7 +32,7 @@ class Chatbot:
           self.behaviour = "Improvise entertaining and not long responses,"\
                            "even if you lack knowledge on a subject."
 
-    def chat(self, message):
+    def chat(self, message: str):
         self.messages.append({"role": "user", "content": message})
 
         response = self.APIClient.respond(messages=list(self.messages[-self.numberOfActiveMessages:]),
@@ -39,6 +41,11 @@ class Chatbot:
         self.messages.append(response)
         
         return response['content']
+    
+    def chat_withoutMemory(self, messages: List[Dict[str, str]], numberOfActoveMessages: int):
+        response = self.APIClient.respond(messages=list(messages[-numberOfActoveMessages:]),
+                                          behaviour=self.behaviour)
+        return response
 
 
 if __name__ == "__main__":
