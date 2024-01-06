@@ -25,7 +25,7 @@ class ChatAIAPIClient(chatAIAPIClient_abstract.ChatAIAPIClient):
 
     def respond(self, messages: List[Dict[str, str]], behaviour: str = None) -> Dict[str, str]:
         client = openai.OpenAI(api_key=self.api_key)
-        firstMessage = {"role": "user", "content": behaviour}
+        firstMessage = {"role": "system", "content": behaviour}
         messages.insert(0, firstMessage)
         response = client.chat.completions.create(model=self.model, messages=messages)
         response = response.choices[0].message
