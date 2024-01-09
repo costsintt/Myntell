@@ -1,3 +1,5 @@
+import random
+
 class APIKeyRotator:
     def __init__(self, keys):
         """
@@ -5,7 +7,7 @@ class APIKeyRotator:
         :param keys: A variable number of API keys.
         """
         self.keys = list(keys)
-        self.index = 0
+        self.index = random.randint(0, len(keys) - 1) if keys else 0
 
     def get_next(self):
         """
