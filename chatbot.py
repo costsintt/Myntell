@@ -32,19 +32,23 @@ class Chatbot:
           self.behaviour = "Improvise entertaining and not long responses,"\
                            "even if you lack knowledge on a subject."
 
+    def getLastActiveMessages(self):
+        return list(self.messages[-self.numberOfActiveMessages:])
+
+
     def chat(self, message: str):
         self.messages.append({"role": "user", "content": message})
 
-        response = self.APIClient.respond(messages=list(self.messages[-self.numberOfActiveMessages:]),
+        response = self.APIClient.respond(messages=self.getLastActiveMessages(),
                                           behaviour=self.behaviour)
 
         self.messages.append(response)
         
         return response['content']
     
-    def chat_withoutMemory(self, messages: List[Dict[str, str]], numberOfActoveMessages: int):
-        response = self.APIClient.respond(messages=list(messages[-numberOfActoveMessages:]),
-                                          behaviour=self.behaviour)
+    def chat_withoutMemory(self, messageText: str):
+        message = {"role": "user", "content": messageText}
+        response = self.APIClient.respond(messages=[message], behaviour=self.behaviour)
         return response
 
 

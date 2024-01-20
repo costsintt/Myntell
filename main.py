@@ -1,108 +1,25 @@
-# f'Check the transcribed audio input for speech errors, including\
-#   incorrect sentence formation, missing or incorrect prepositions, and any\
-#   other speech and logical errors. If the sentence is correct, output "Correct."\
-#   If the sentence is incorrect, provide an explanation\
-#   for each problem found. The message: "{message}".'
-
-import sounddevice as sd
-import soundfile as sf
-import numpy as np
-
-from io import BytesIO
-from typing import Union, BinaryIO
-
-import pygame
-
 from chatAIAPIClient_openai import ChatAIAPIClient
 from speechToTextAPIClient_openai import SpeechToTextAPIClient
-from textToSpeechAPIClient_gtts import TextToSpeechAPIClient
-from chatbot import Chatbot
+from textToSpeechAPIClient_openai import TextToSpeechAPIClient
+from apiKeysStorage import ApiKeys
 
+from scenario_discuss_withPredictor import Scenario
 
-class AudioRecorder:
-    def __init__(self, samplerate=44100):
-        self.isRecording = False
-        self.samplerate = samplerate
-        self.buffer = []
-        self.stream = sd.InputStream(callback=self.callback, channels=1, samplerate=samplerate)
-
-    def callback(self, indata, frames, time, status):
-        self.buffer.append(indata.copy())
-
-    def start_recording(self):
-        if not self.isRecording:
-            self.isRecording = True
-            self.stream.start()
-
-    def stop_recording(self):
-        if self.isRecording:
-            self.isRecording = False
-            self.stream.stop()
-            recording = np.concatenate(self.buffer, axis=0)
-            self.buffer = []
-            return recording
-
-def file_read(filename: str) -> Union[BytesIO, None]:
-    try:
-        with open(filename, 'rb') as file:
-            content = file.read()
-    except FileNotFoundError:
-        return None
-    else:
-        clone = BytesIO(content)
-        return clone
-
-def file_write(fileToWrite: BytesIO, filename: str) -> None:
-    with open(filename, 'wb') as file:
-        file.write(fileToWrite.getbuffer())
 
 if __name__ == "__main__":
-    pygame.init()
-    pygame.mixer.init()
-    from apiKeys import apiKey_openai
-
-    sttAPI = SpeechToTextAPIClient(api_key=apiKey_openai)
-    ttsAPI = TextToSpeechAPIClient()
-    chatAPI = ChatAIAPIClient(api_key=apiKey_openai)
     
-    conversationalBot = Chatbot(chatAPI)
+    from apiKeys import apiKeys
+    keys = ApiKeys(apiKeys)
 
-    recorder = AudioRecorder()
+    sttAPI = SpeechToTextAPIClient(api_key=keys.get())
+    ttsAPI = TextToSpeechAPIClient(api_key=keys.get())
+    chatAPI = ChatAIAPIClient(api_key=keys.get())
 
-    isRecording = False
-    while(True):
-        command = input()
-        if command == '1':
-            print("Recording started...", sep='')
-            isRecording = True
-            recorder.start_recording()
-        elif (command == '2') and isRecording:
-            print("STOPPED")
-            isRecording = False
-            data = recorder.stop_recording()
-            audioFile = BytesIO()
-            sf.write(audioFile, data, 44100, format="wav")
-            audioFile.seek(0)
-            
-            userMessage = sttAPI.transcribe(audioFile)
-            print("User:\t", userMessage)
-            botMessage = conversationalBot.chat(userMessage)
-            print("Bot:\t", botMessage)
-            
-            audioFile.seek(0)
-            audioFile.truncate(0)
-            audioFile.write(ttsAPI.synthesize(botMessage))
+    scenario = Scenario(chatAPI, keys, "Pretend you are an arrogant professor hurrying home. Your messages must be very short, one or two-sentenced.")
 
-            audioFile.seek(0)
-            file_write(audioFile, "temp.mp3")
-            pygame.mixer.music.load("temp.mp3")
-            pygame.mixer.music.play()
-            while pygame.mixer.music.get_busy():
-                pygame.time.Clock().tick(10)
-            pygame.mixer.music.unload()
-
-
-        elif command == '0':
-            print("ALL MESSAGES")
-            for message in conversationalBot.messages:
-                print(message)
+    import interface_user
+    interface_user.sttAPI = sttAPI
+    interface_user.ttsAPI = ttsAPI
+    interface_user.scenario = scenario
+    interface_user.keys = keys
+    interface_user.start()
