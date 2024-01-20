@@ -46,7 +46,7 @@ class Scenario(scenario_abstract.Scenario):
 
         discussionToPredict = convert_dicts_to_string(self.conversationalBot.getLastActiveMessages())
         prediction = self.predictorBot.chat_withoutMemory(discussionToPredict)['content']
-        self.additionalInfo = f"\nPredictor said:---\n{prediction}\n---"
+        self.additionalInfo = f"\nPredictor said:\n---\n{prediction}\n---"
 
         return answer
 
