@@ -2,7 +2,7 @@
 
 ## How to use it without writing new code?
 If you're planning to use my OpenAI API wrappers, you'll need an OpenAI API key (obviously). Just create a file named 'apiKeys.py' in the project root directory and add the following line:
-`apiKeys = "yourKey"`
+`apiKeys = ("yourKey")`
 If you have multiple API keys (which is a bit odd...), you can add them all! Like this:
 `apiKeys = ("key1", "key2", and so on)`
 
